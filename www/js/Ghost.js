@@ -24,6 +24,7 @@ export default class Ghost {
 
 		// TODO: расчёт положения призрака
 
+		PacMan.ctx.fillStyle = ghost.color;
 		PacMan.ctx.beginPath();
 		PacMan.ctx.moveTo(83, 116);
 		PacMan.ctx.lineTo(83, 102);

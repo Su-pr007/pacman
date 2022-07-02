@@ -77,8 +77,6 @@ export default class PacMan {
 		for (let i = 0; i < PacMan.ghostList.length; i++) {
 			Ghost.drawGhost(PacMan.ghostList[i]);
 		}
-
-
 	}
 
 	static drawPacMan() {
