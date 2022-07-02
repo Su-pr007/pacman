@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.21.1-alpine
+    ports:
+      - ${HOST_PORT}:80
+    volumes:
+      - ./www:/var/www/pacman
+      - ./nginx-conf:/etc/nginx/templates
+    environment:
+      - GLOBAL_DOMAIN=${GLOBAL_DOMAIN}
+      - SERVER_PORT=${SERVER_PORT}
+      - MAX_BUF_SIZE=${MAX_BUF_SIZE}
+      - MAX_BODY_SIZE=${MAX_BODY_SIZE}
+    restart: always
+
+  php-fpm:
+    image: php:7.4-fpm
+    volumes:
+      - ./www:/var/www/pacman
+    extra_hosts:
+      - "${GLOBAL_DOMAIN}:172.17.0.1"
+    restart: always
+
+networks:
+  default:
