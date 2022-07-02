@@ -1,27 +1,24 @@
 "use strict";
 
-import MousePosition from './MousePosition.js';
-import Enemy from './Enemy.js';
-
 export default class PacMan {
 	static size = 20;
 	static pacmanColor = '#ee0';
-	static foodColor = '#333';
-	static maxEnemyCount = 50;
+	static maxGhostCount = 50;
 	static drawer;
 	static canvas;
 	static windowW;
 	static windowH;
 	static posX;
 	static posY;
-	static foodList = [];
+	static ghostList = [];
+	static mouthAngle = 0;
+	static isMouthReversed = false;
+	static maxMouthAngle = 1;
+	static minMouthAngle = 0;
 
-
-	constructor() {
+	static init() {
 		PacMan.canvas = document.getElementById('canvas');
-	}
 
-	init() {
 		PacMan.updateWindowSizes();
 		let isSuccess = PacMan.draw();
 
@@ -29,7 +26,7 @@ export default class PacMan {
 			return;
 		}
 
-		PacMan.drawer = setInterval(PacMan.draw, 1000 / 60);
+		PacMan.drawer = setInterval(PacMan.draw, 1000 / 120);
 
 		PacMan.canvas.addEventListener('mousemove', MousePosition.mouseMoveHandler, false);
 		window.addEventListener('resize', this.updateWindowSizes, false);
@@ -43,64 +40,67 @@ export default class PacMan {
 		PacMan.ctx = PacMan.canvas.getContext('2d');
 		PacMan.ctx.clearRect(0, 0, PacMan.canvas.width, PacMan.canvas.height); // Очистка прошлого кадра
 
-		PacMan.posX = MousePosition.x - (PacMan.size / 2);
-		PacMan.posY = MousePosition.y - (PacMan.size / 2);
+		PacMan.posX = MousePosition.x;
+		PacMan.posY = MousePosition.y;
 
-		PacMan.addEnemy();
+		PacMan.updateEnemies();
 		PacMan.drawEnemies();
 		PacMan.drawPacMan();
 
 		return true;
 	}
 
-	static addEnemy() {
-		if (PacMan.foodList >= PacMan.maxEnemyCount) {
+	static updateEnemies() {
+		for (let i = 0; i < PacMan.ghostList.length; i++) {
+			let ghost = PacMan.ghostList[i];
+
+			ghost.x -= ghost.speed;
+		}
+
+		if (PacMan.ghostList >= PacMan.maxGhostCount) {
 			return;
 		}
 
-		for (let i = 0; i < PacMan.maxEnemyCount - PacMan.foodList.length; i++) {
+		for (let i = 0; i < PacMan.maxGhostCount - PacMan.ghostList.length; i++) {
 			let posX = Math.random()*100 + PacMan.windowW,
 				posY = Math.random()*PacMan.windowH,
 				size = Math.random()*100,
-				newEnemy = new Enemy(posX, posY, size);
+				color = '#'+Math.floor(Math.random()*16777215).toString(16),
+				speed = Math.random() * 10,
+				newGhost = new Ghost(posX, posY, size, speed, color);
 
-			PacMan.foodList.push(newEnemy);
+			PacMan.ghostList.push(newGhost);
 		}
 	}
 
 	static drawEnemies() {
-		PacMan.ctx.fillStyle = PacMan.foodColor;
-		for (let i = 0; i < PacMan.foodList.length; i++) {
-			let food = PacMan.foodList[i],
-				foodSize = food.size,
-				foodPosX = food.posX,
-				foodPosY = food.posY,
-				foodCenterX = foodPosX - foodSize,
-				foodCenterY = foodPosY - foodSize;
-
-			// TODO: расчёт положения призрака
-			PacMan.ctx.beginPath();
-			PacMan.ctx.moveTo(83, 116);
-			PacMan.ctx.lineTo(83, 102);
-			PacMan.ctx.bezierCurveTo(83, 94, 89, 88, 97, 88);
-			PacMan.ctx.bezierCurveTo(105, 88, 111, 94, 111, 102);
-			PacMan.ctx.lineTo(111, 116);
-			PacMan.ctx.lineTo(106.333, 111.333);
-			PacMan.ctx.lineTo(101.666, 116);
-			PacMan.ctx.lineTo(97, 111.333);
-			PacMan.ctx.lineTo(92.333, 116);
-			PacMan.ctx.lineTo(87.666, 111.333);
-			PacMan.ctx.lineTo(83, 116);
-			PacMan.ctx.fill();
+		for (let i = 0; i < PacMan.ghostList.length; i++) {
+			Ghost.drawGhost(PacMan.ghostList[i]);
 		}
 
 
 	}
 
 	static drawPacMan() {
+		// Анимация рта
+		if (PacMan.isMouthReversed) {
+			PacMan.mouthAngle -= 0.01;
+
+			if (PacMan.mouthAngle <= PacMan.minMouthAngle) {
+				PacMan.isMouthReversed = false;
+			}
+		}
+		else {
+			PacMan.mouthAngle += 0.01;
+
+			if (PacMan.mouthAngle >= PacMan.maxMouthAngle) {
+				PacMan.isMouthReversed = true;
+			}
+		}
+
 		PacMan.ctx.fillStyle = PacMan.pacmanColor;
 		PacMan.ctx.beginPath();
-		PacMan.ctx.arc(PacMan.posX, PacMan.posY, PacMan.size, Math.PI / 7, -Math.PI / 7, false);
+		PacMan.ctx.arc(PacMan.posX, PacMan.posY, PacMan.size, PacMan.mouthAngle, -PacMan.mouthAngle, false);
 		PacMan.ctx.lineTo(PacMan.posX, PacMan.posY);
 		PacMan.ctx.fill();
 	}
