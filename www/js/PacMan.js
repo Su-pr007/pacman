@@ -1,4 +1,6 @@
 "use strict";
+import MousePosition from './MousePosition.js';
+import Ghost from './Ghost.js';
 
 export default class PacMan {
 	static size = 20;
@@ -12,12 +14,16 @@ export default class PacMan {
 	static posY;
 	static ghostList = [];
 	static mouthAngle = 0;
-	static isMouthReversed = false;
+	static isMouthReversed = 1;
 	static maxMouthAngle = 1;
-	static minMouthAngle = 0;
+	static minMouthAngle = 0.1;
 
 	static init() {
 		PacMan.canvas = document.getElementById('canvas');
+
+		window.PacMan = PacMan;
+		window.MousePosition = MousePosition;
+		window.Ghost = Ghost;
 
 		PacMan.updateWindowSizes();
 		let isSuccess = PacMan.draw();
@@ -45,6 +51,7 @@ export default class PacMan {
 
 		PacMan.updateEnemies();
 		PacMan.drawEnemies();
+		PacMan.drawMousePath();
 		PacMan.drawPacMan();
 
 		return true;
@@ -101,6 +108,22 @@ export default class PacMan {
 		PacMan.ctx.arc(PacMan.posX, PacMan.posY, PacMan.size, PacMan.mouthAngle, -PacMan.mouthAngle, false);
 		PacMan.ctx.lineTo(PacMan.posX, PacMan.posY);
 		PacMan.ctx.fill();
+	}
+
+	static drawMousePath() {
+		for (let i = 0; i < MousePosition.prevPositions.length; i++) {
+			let lineFrom = MousePosition.prevPositions[i],
+				lineTo = MousePosition.prevPositions[i+1] !== undefined
+					? MousePosition.prevPositions[i+1]
+					: {x: MousePosition.x, y: MousePosition.y};
+
+			PacMan.ctx.strokeStyle = 'blue';
+
+			PacMan.ctx.beginPath();
+			PacMan.ctx.moveTo(lineFrom.x, lineFrom.y);
+			PacMan.ctx.lineTo(lineTo.x, lineTo.y)
+			PacMan.ctx.stroke();
+		}
 	}
 
 	static updateWindowSizes() {
