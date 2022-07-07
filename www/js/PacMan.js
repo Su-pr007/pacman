@@ -124,6 +124,7 @@ export default class PacMan {
 			PacMan.ctx.lineTo(lineTo.x, lineTo.y)
 			PacMan.ctx.stroke();
 		}
+		MousePosition.prevPositions.shift();
 	}
 
 	static updateWindowSizes() {
