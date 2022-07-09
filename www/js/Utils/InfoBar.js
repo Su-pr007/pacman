@@ -1,0 +1,26 @@
+"use strict";
+
+import Counter from "./Counter.js";
+import Pacman from "../Characters/Pacman.js";
+
+export default class InfoBar
+{
+	static eatScoreBlock;
+	static sizeBlock;
+	static eatScoreBlockSelector = '#eatenScore';
+	static sizeBlockSelector = '#characterSize';
+
+	static init() {
+		InfoBar.eatScoreBlock = document.querySelector(this.eatScoreBlockSelector);
+		InfoBar.sizeBlock = document.querySelector(this.sizeBlockSelector);
+	}
+
+	static updateInfo() {
+		if (InfoBar.eatScoreBlock === null || InfoBar.sizeBlock === null) {
+			return;
+		}
+
+		InfoBar.eatScoreBlock.innerHTML = Counter.eatenGhosts;
+		InfoBar.sizeBlock.innerHTML = Pacman.size;
+	}
+}

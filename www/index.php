@@ -9,6 +9,12 @@
 	<script defer type="module" src="js/main.js"></script>
 </head>
 <body>
+	<header>
+		<div class="info-bar">
+			<div class="eaten-ghosts">Съедено приведений: <span id="eatenScore">0</span></div>
+			<div class="character-size">Твой размер: <span id="characterSize">20</span></div>
+		</div>
+	</header>
 	<canvas id="canvas"></canvas>
 </body>
 </html>

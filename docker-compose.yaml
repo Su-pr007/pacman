@@ -9,6 +9,7 @@ services:
       - ./www:/var/www/pacman
       - ./nginx-conf:/etc/nginx/templates
     environment:
+      - VIRTUAL_HOST=${GLOBAL_DOMAIN}
       - GLOBAL_DOMAIN=${GLOBAL_DOMAIN}
       - SERVER_PORT=${SERVER_PORT}
       - MAX_BUF_SIZE=${MAX_BUF_SIZE}
@@ -23,5 +24,13 @@ services:
       - "${GLOBAL_DOMAIN}:172.17.0.1"
     restart: always
 
+#  nginx-proxy:
+#    image: nginxproxy/nginx-proxy
+#    ports:
+#      - '80:80'
+#    volumes:
+#      - /var/run/docker.sock:/tmp/docker.sock:ro
+
 networks:
   default:
+    name: local-network

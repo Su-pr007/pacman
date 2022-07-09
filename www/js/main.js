@@ -1,5 +1,5 @@
 "use strict";
 
-import PacMan from './PacMan.js';
+import Canvas from './Canvas.js';
 
-PacMan.init();
+Canvas.init();
