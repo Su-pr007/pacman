@@ -9,10 +9,12 @@ export default class InfoBar
 	static sizeBlock;
 	static eatScoreBlockSelector = '#eatenScore';
 	static sizeBlockSelector = '#characterSize';
+	static missedBlockSelector = '#missedGhosts';
 
 	static init() {
 		InfoBar.eatScoreBlock = document.querySelector(this.eatScoreBlockSelector);
 		InfoBar.sizeBlock = document.querySelector(this.sizeBlockSelector);
+		InfoBar.missedGhosts = document.querySelector(this.missedBlockSelector);
 	}
 
 	static updateInfo() {
@@ -22,5 +24,6 @@ export default class InfoBar
 
 		InfoBar.eatScoreBlock.innerHTML = Counter.eatenGhosts;
 		InfoBar.sizeBlock.innerHTML = Pacman.size;
+		InfoBar.missedGhosts.innerHTML = Counter.missedGhosts;
 	}
 }
