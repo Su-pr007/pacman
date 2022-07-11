@@ -17,7 +17,7 @@ export default class InfoBar
 		InfoBar.missedGhosts = document.querySelector(this.missedBlockSelector);
 	}
 
-	static updateInfo() {
+	async static updateInfo() {
 		if (InfoBar.eatScoreBlock === null || InfoBar.sizeBlock === null) {
 			return;
 		}

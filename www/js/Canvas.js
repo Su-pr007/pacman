@@ -6,6 +6,7 @@ import Pacman from "./Characters/Pacman.js";
 import Counter from "./Utils/Counter.js";
 import Logic from "./Utils/Logic.js";
 import InfoBar from "./Utils/InfoBar.js";
+import Hotkeys from "./Utils/Hotkeys.js";
 
 export default class Canvas {
 	static maxGhostCount = 10;
@@ -22,6 +23,7 @@ export default class Canvas {
 
 		Canvas.initGlobals();
 		InfoBar.init();
+		Hotkeys.initKeyHandlers();
 
 		Canvas.ctx = Canvas.canvas.getContext('2d');
 
@@ -123,7 +125,7 @@ export default class Canvas {
 	}
 
 	static drawMousePath() {
-		if (localStorage.getItem('showPMousePath') !== 'Y') {
+		if (Logic.isShowMousePath) {
 			return;
 		}
 
@@ -143,14 +145,6 @@ export default class Canvas {
 		if (Canvas.animStep % 2 === 0) {
 			MousePosition.prevPositions.shift();
 		}
-	}
-
-	static pause() {
-		document.body.classList.add('paused');
-	}
-
-	static continue() {
-		document.body.classList.remove('paused');
 	}
 
 	static updateWindowSizes() {

@@ -5,6 +5,7 @@ import Pacman from "../Characters/Pacman.js";
 export default class Logic
 {
 	static isGhostEaten = false;
+	static storageMousePathName = 'showMousePath';
 
 	static checkGhostEaten(ghost) {
 		// Pacman
@@ -42,4 +43,27 @@ export default class Logic
 
 	return !(aLeftOfB || aRightOfB || aAboveB || aBelowB);
 }
+
+	static isShowMousePath() {
+		return localStorage.getItem(Logic.storageMousePathName) !== 'Y';
+	}
+
+	static pause() {
+		document.body.classList.add('paused');
+	}
+
+	static continue() {
+		document.body.classList.remove('paused');
+	}
+
+	static toggleTail() {
+		if (Logic.isShowMousePath()) {
+			localStorage.setItem(Logic.storageMousePathName, 'N');
+
+			return;
+		}
+
+		localStorage.setItem(Logic.storageMousePathName, 'Y');
+	}
+
 }
